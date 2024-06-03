@@ -24,7 +24,7 @@ class mainModel{
     protected function connect() {
         try {
             $connect = new PDO(
-                "mystmt:host=" . $this->server . ";dbname=" . $this->db,
+                "mysql:host=" . $this->server . ";dbname=" . $this->db,
                 $this->user,
                 $this->pass,
                 $this->options

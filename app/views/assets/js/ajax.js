@@ -34,8 +34,8 @@ ajaxForms.forEach(forms => {
                 };
 
                 fetch(action,config)
-                .then(response => response.json())
-                .then(response =>{ 
+                    .then(response => response.json())
+                    .then(response =>{ 
                     return ajaxAlerts(response);
                 });
             }
