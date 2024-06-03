@@ -2,7 +2,7 @@
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="<?php echo APP_URL ?>dashboard/" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="<?php echo APP_URL ?>app/views/assets/images/php-logo.png" class="h-8" alt="Company Logo" />
-            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"><?php echo APP_NAME ?></span>
         </a>
         <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             <button type="button" class="flex items-center gap-2 text-sm rounded-full md:me-0" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
