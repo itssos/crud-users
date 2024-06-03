@@ -47,7 +47,7 @@ class mainModel{
         $chain = trim($chain);
         $chain = stripslashes($chain);
         
-        // [?] evitar XSS
+        // avoid XSS
         $chain = htmlspecialchars($chain, ENT_QUOTES, 'UTF-8');
         
         return $chain;
@@ -97,10 +97,93 @@ class mainModel{
         return $stmt;
     }
 
-    // public function getUserById($id) {
-    //     $query = "SELECT * FROM users WHERE id = :id";
-    //     $params = ['id' => $id];
-    //     return $this->executeQuery($query, $params)->fetch();
-    // }
+    protected function updateData($table, $data, $condition) {
+        try {
+            $setClause = implode(", ", array_map(function($item) {
+                return "{$item['field_name']} = {$item['field_param']}";
+            }, $data));
+    
+            $query = "UPDATE $table SET $setClause WHERE {$condition['condition_field']} = {$condition['condition_param']}";
+            $stmt = $this->connect()->prepare($query);
+    
+            foreach ($data as $item) {
+                $stmt->bindParam($item["field_param"], $item["field_value"]);
+            }
+    
+            $stmt->bindParam($condition["condition_param"], $condition["condition_value"]);
+            $stmt->execute();
+            return $stmt;
+        } catch (PDOException $e) {
+            exit('Data update failed: ' . $e->getMessage());
+        }
+    }
+
+
+    protected function deleteRecord($table, $field, $id) {
+        $stmt = $this->connect()->prepare("DELETE FROM $table WHERE $field = :id");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    protected function paginateTables($currentPage, $totalPages, $url, $buttonsToShow) {
+        $pagination = '<nav class="pagination is-centered is-rounded" role="navigation" aria-label="pagination">';
+        
+        // previous button
+        if ($currentPage <= 1) {
+            $pagination .= '<a class="pagination-previous is-disabled" disabled>Anterior</a>';
+        } else {
+            $pagination .= '<a class="pagination-previous" href="' . $url . ($currentPage - 1) . '/">Anterior</a>';
+        }
+    
+        $pagination .= '<ul class="pagination-list">';
+    
+        // First page link and ellipsis if needed
+        if ($currentPage > 1) {
+            $pagination .= '<li><a class="pagination-link" href="' . $url . '1/">1</a></li>';
+            if ($currentPage > 2) {
+                $pagination .= '<li><span class="pagination-ellipsis">&hellip;</span></li>';
+            }
+        }
+    
+        // Page number links
+        $start = max(1, $currentPage - floor($buttonsToShow / 2));
+        $end = min($totalPages, $currentPage + floor($buttonsToShow / 2));
+        if ($start > 1) {
+            $end = min($totalPages, $start + $buttonsToShow - 1);
+        }
+        if ($end < $totalPages) {
+            $start = max(1, $end - $buttonsToShow + 1);
+        }
+    
+        for ($i = $start; $i <= $end; $i++) {
+            if ($currentPage == $i) {
+                $pagination .= '<li><a class="pagination-link is-current" href="' . $url . $i . '/">' . $i . '</a></li>';
+            } else {
+                $pagination .= '<li><a class="pagination-link" href="' . $url . $i . '/">' . $i . '</a></li>';
+            }
+        }
+    
+        // Last page link and ellipsis if needed
+        if ($currentPage < $totalPages - 1) {
+            if ($currentPage < $totalPages - 2) {
+                $pagination .= '<li><span class="pagination-ellipsis">&hellip;</span></li>';
+            }
+            $pagination .= '<li><a class="pagination-link" href="' . $url . $totalPages . '/">' . $totalPages . '</a></li>';
+        }
+    
+        $pagination .= '</ul>';
+    
+        // Next button
+        if ($currentPage >= $totalPages) {
+            $pagination .= '<a class="pagination-next is-disabled" disabled>Siguiente</a>';
+        } else {
+            $pagination .= '<a class="pagination-next" href="' . $url . ($currentPage + 1) . '/">Siguiente</a>';
+        }
+    
+        $pagination .= '</nav>';
+        return $pagination;
+    }   
 
 }
