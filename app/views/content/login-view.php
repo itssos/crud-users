@@ -2,7 +2,7 @@
   <div class="flex flex-col shadow-md px-6 md:px-8 lg:px-10 py-8 rounded-md w-full max-w-md">
     <div class="font-medium self-center text-2xl text-white">INGRESE A SU CUENTA</div>
     <div class="mt-10">
-      <form action="#">
+      <form action="" class="">
         <div class="flex flex-col mb-6">
           <label for="username" class="mb-1 text-sm tracking-wide text-white">User:</label>
           <div class="relative">
