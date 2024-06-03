@@ -24,7 +24,7 @@ class mainModel{
     protected function connect() {
         try {
             $connect = new PDO(
-                "mysql:host=" . $this->server . ";dbname=" . $this->db,
+                "mystmt:host=" . $this->server . ";dbname=" . $this->db,
                 $this->user,
                 $this->pass,
                 $this->options
@@ -78,6 +78,23 @@ class mainModel{
         } catch (PDOException $e) {
             exit('Data insertion failed: ' . $e->getMessage());
         }
+    }
+
+    public function selectData($type,$table,$field,$id){
+        $type=$this->cleanChain($type);
+        $table=$this->cleanChain($table);
+        $field=$this->cleanChain($field);
+        $id=$this->cleanChain($id);
+
+        if($type=="Unique"){
+            $stmt=$this->connect()->prepare("SELECT * FROM $table WHERE $field=:ID");
+            $stmt->bindParam(":ID",$id);
+        }elseif($type=="Normal"){
+            $stmt=$this->connect()->prepare("SELECT $field FROM $table");
+        }
+        $stmt->execute();
+
+        return $stmt;
     }
 
     // public function getUserById($id) {
