@@ -5,7 +5,7 @@ namespace app\models;
 class viewsModel {
 
     protected function getModelViews($view){
-        $whiteList = ["dashboard"];
+        $whiteList = ["dashboard","userNew","userList","userSearch","userUpdate","userPhoto","logOut"];
 
         if(in_array($view, $whiteList)){
             if(is_file("./app/views/content/".$view."-view.php")){
