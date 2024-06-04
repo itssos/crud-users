@@ -12,6 +12,8 @@ class userController extends mainModel {
         $email = $this->cleanChain($_POST['email']);
         $password = $this->cleanChain($_POST['password']);
         $confirmPassword = $this->cleanChain($_POST['confirm_password']);
+        # Directorio de imagenes #
+        $imgDir = "../views/assets/images/photos/";
 
         $alert = $this->validateInputs($name, $surname, $user, $email, $password, $confirmPassword);
         if ($alert) {
